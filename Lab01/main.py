@@ -73,5 +73,5 @@ plt.plot(scales, times, 'r')
 plt.xlabel('N')
 plt.ylabel('t')
 
-plt.savefig('fig.png')
+plt.savefig('fig2.png')
 plt.show()
