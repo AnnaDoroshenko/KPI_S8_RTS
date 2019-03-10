@@ -4,12 +4,6 @@ import random
 import time
 
 
-TICKS = 1024
-HARMONICS = 8
-FREQUENCY = 1200
-STEP = FREQUENCY / HARMONICS
-
-
 class Harmonic:
     def __init__(self, frequency, ticks):
         self.amplitude = random.uniform(0.0, 1.0)
@@ -100,39 +94,65 @@ def generate_table(ticks):
     return table_set
 
 
-signal_x = generate_signal(HARMONICS, TICKS, STEP)
+def calc_FFT(signal):
+    N = len(signal);
+    if (N == 2):
+        return list((signal[0] + signal[1], signal[0] - signal[1]))
 
-mean_x = calc_mean(signal_x, TICKS)
-calc_dispertion(signal_x, mean_x, TICKS)
-startTime = time.time()
-fourier_x, ps = calc_DFT(signal_x, TICKS)
-print("Elapsed time = {}".format(time.time()-startTime))
-compl_t, compl_n = calc_complexity(1)
+    even, odd = calc_FFT(signal[0::2]), calc_FFT(signal[1::2])
+    w = lambda k: complex(1.0, 0.0) if (k % N == 0) \
+        else complex(np.cos(2.0*np.pi*k/N), np.sin(2.0*np.pi*k/N))
+    res = [0 for _ in range(N)]
+    for i in range(int(N/2)):
+        res[i] = even[i] + w(i) * odd[i]
+        res[i+int(N/2)] = even[i] - w(i) * odd[i]
 
-table = generate_table(TICKS)
-startTime = time.time()
-calc_DFT(signal_x, TICKS, table)
-print("Elapsed time = {}".format(time.time()-startTime))
-
-
-plt.subplot(2, 1, 1)
-plt.plot(signal_x.ts, signal_x.xss, 'k')
-plt.xlabel('t')
-plt.ylabel('x(t)')
-plt.grid(True)
-
-plt.subplot(2, 1, 2)
-plt.plot(ps, fourier_x, 'b')
-plt.xlabel('p')
-plt.ylabel('F(p)')
-plt.grid(True)
-
-# plt.subplot(3, 1, 3)
-# plt.plot(compl_n, compl_t, 'c')
-# plt.xlabel('N')
-# plt.ylabel('t')
-# plt.grid(True)
+    return res
 
 
-plt.savefig('fig.png')
-plt.show()
+if __name__ == "__main__":
+    TICKS = 1024
+    HARMONICS = 8
+    FREQUENCY = 1200
+    STEP = FREQUENCY / HARMONICS
+
+
+    signal_x = generate_signal(HARMONICS, TICKS, STEP)
+
+    mean_x = calc_mean(signal_x, TICKS)
+    calc_dispertion(signal_x, mean_x, TICKS)
+    # fourier_x, ps = calc_DFT(signal_x, TICKS)
+    # compl_t, compl_n = calc_complexity(1)
+
+    table = generate_table(TICKS)
+    fourier_x, ps = calc_DFT(signal_x, TICKS, table)
+    fast_fourier_x = [abs(value) for value in calc_FFT(signal_x.xss)]
+
+
+    plt.subplot(3, 1, 1)
+    plt.plot(signal_x.ts, signal_x.xss, 'k')
+    plt.xlabel('t')
+    plt.ylabel('x(t)')
+    plt.grid(True)
+
+    plt.subplot(3, 1, 2)
+    plt.plot(ps, fourier_x, 'b')
+    plt.xlabel('p')
+    plt.ylabel('F(p)')
+    plt.grid(True)
+
+    plt.subplot(3, 1, 3)
+    plt.plot(signal_x.ts, fast_fourier_x, 'c')
+    plt.xlabel('p')
+    plt.ylabel('F(p)')
+    plt.grid(True)
+
+    # plt.subplot(3, 1, 3)
+    # plt.plot(compl_n, compl_t, 'c')
+    # plt.xlabel('N')
+    # plt.ylabel('t')
+    # plt.grid(True)
+
+
+    plt.savefig('fig.png')
+    plt.show()
