@@ -129,19 +129,19 @@ if __name__ == "__main__":
     fast_fourier_x = [abs(value) for value in calc_FFT(signal_x.xss)]
 
 
-    plt.subplot(3, 1, 1)
+    plt.subplot(2, 1, 1)
     plt.plot(signal_x.ts, signal_x.xss, 'k')
     plt.xlabel('t')
     plt.ylabel('x(t)')
     plt.grid(True)
 
-    plt.subplot(3, 1, 2)
-    plt.plot(ps, fourier_x, 'b')
-    plt.xlabel('p')
-    plt.ylabel('F(p)')
-    plt.grid(True)
+    # plt.subplot(3, 1, 2)
+    # plt.plot(ps, fourier_x, 'b')
+    # plt.xlabel('p')
+    # plt.ylabel('F(p)')
+    # plt.grid(True)
 
-    plt.subplot(3, 1, 3)
+    plt.subplot(2, 1, 2)
     plt.plot(signal_x.ts, fast_fourier_x, 'c')
     plt.xlabel('p')
     plt.ylabel('F(p)')
@@ -154,5 +154,5 @@ if __name__ == "__main__":
     # plt.grid(True)
 
 
-    plt.savefig('fig.png')
+    # plt.savefig('fig.png')
     plt.show()
