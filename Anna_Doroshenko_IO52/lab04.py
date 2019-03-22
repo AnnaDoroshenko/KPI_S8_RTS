@@ -12,7 +12,6 @@ class Harmonic:
         current_xs = [self.amplitude*np.sin(frequency*t+self.phase) for t in range(ticks)]
         self.xs = current_xs
 
-
 class Signal:
     def __init__(self, harmonic_amount, ticks, step):
         current_sum = [0 for _ in range(ticks)]
@@ -24,30 +23,18 @@ class Signal:
         self.xss = current_sum
         self.ts = [t for t in range(ticks)]
 
-
 def generate_signal(harmonic_amount, ticks, step):
     return Signal(harmonic_amount, ticks, step)
 
-
 def calc_mean(signal, ticks):
-    # start = time.time()
     mean = sum(signal.xss) / ticks
-    # elapsedTime = time.time() - start
     print("Mean = {}".format(mean))
-    # print("Elapsed time for mean calculation = {}".format(elapsedTime))
-    # print("----------------------------------------------------------")
-
     return mean
 
-
 def calc_dispertion(signal, mean, ticks):
-    # start = time.time()
     dispertion = sum(((x-mean)*(x-mean)) for x in signal.xss) / (ticks-1)
-    # elapsedTime = time.time() - start
     print("Dispertion = {}".format(dispertion))
-    # print("Elapsed time for dispertion calculation = {}".format(elapsedTime))
     print('----------------------------------------------------------')
-
 
 def calc_complexity(num):
     times = []
@@ -58,9 +45,7 @@ def calc_complexity(num):
         elapsed_time = time.time() - start + signal.elapsed_time
         times.append(elapsed_time)
     nums = [TICKS*i for i in range(1, num+1)]
-
     return times, nums
-
 
 def calc_DFT(signal, ticks, table=None):
     re = []
@@ -81,18 +66,14 @@ def calc_DFT(signal, ticks, table=None):
         im.append(sum_im)
     result = np.sqrt([((re[i]*re[i])+(im[i]*im[i])) for i in range(ticks-1)]), \
             [p for p in range(ticks-1)]
-
     return result
-
 
 def generate_table(ticks):
     table_set = []
     for pk in range(ticks):
         arg = 2*np.pi/ticks*pk
         table_set.append((np.cos(arg), np.sin(arg)))
-
     return table_set
-
 
 def calc_FFT(signal):
     N = len(signal);
@@ -106,9 +87,7 @@ def calc_FFT(signal):
     for i in range(int(N/2)):
         res[i] = even[i] + w(i) * odd[i]
         res[i+int(N/2)] = even[i] - w(i) * odd[i]
-
     return res
-
 
 if __name__ == "__main__":
     TICKS = 1024
@@ -145,5 +124,5 @@ if __name__ == "__main__":
     plt.ylabel('FF(p)')
     plt.grid(True)
 
-    # plt.savefig('fig.png')
+    plt.savefig('fig4.png')
     plt.show()

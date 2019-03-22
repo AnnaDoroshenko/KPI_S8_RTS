@@ -36,22 +36,14 @@ def generate_signal(harmonic_amount, ticks, step):
 
 
 def calc_mean(signal, ticks):
-    # start = time.time()
     mean = sum(signal.xss) / ticks
-    # elapsedTime = time.time() - start
     print("Mean = {}".format(mean))
-    # print("Elapsed time for mean calculation = {}".format(elapsedTime))
-    # print("----------------------------------------------------------")
-
     return mean
 
 
 def calc_dispertion(signal, mean, ticks):
-    # start = time.time()
     dispertion = sum(((x-mean)*(x-mean)) for x in signal.xss) / (ticks-1)
-    # elapsedTime = time.time() - start
     print("Dispertion = {}".format(dispertion))
-    # print("Elapsed time for dispertion calculation = {}".format(elapsedTime))
     print('----------------------------------------------------------')
 
 
@@ -64,7 +56,6 @@ def calc_complexity(num):
         elapsed_time = time.time() - start + signal.elapsed_time
         times.append(elapsed_time)
     nums = [TICKS*i for i in range(1, num+1)]
-
     return times, nums
 
 
@@ -96,7 +87,6 @@ def generate_table(ticks):
     for pk in range(ticks):
         arg = 2*np.pi/ticks*pk
         table_set.append((np.cos(arg), np.sin(arg)))
-
     return table_set
 
 
@@ -115,24 +105,23 @@ calc_DFT(signal_x, TICKS, table)
 print("Elapsed time = {}".format(time.time()-startTime))
 
 
-plt.subplot(2, 1, 1)
+plt.subplot(3, 1, 1)
 plt.plot(signal_x.ts, signal_x.xss, 'k')
 plt.xlabel('t')
 plt.ylabel('x(t)')
 plt.grid(True)
 
-plt.subplot(2, 1, 2)
+plt.subplot(3, 1, 2)
 plt.plot(ps, fourier_x, 'b')
 plt.xlabel('p')
 plt.ylabel('F(p)')
 plt.grid(True)
 
-# plt.subplot(3, 1, 3)
-# plt.plot(compl_n, compl_t, 'c')
-# plt.xlabel('N')
-# plt.ylabel('t')
-# plt.grid(True)
+plt.subplot(3, 1, 3)
+plt.plot(compl_n, compl_t, 'c')
+plt.xlabel('N')
+plt.ylabel('t')
+plt.grid(True)
 
-
-plt.savefig('fig.png')
+plt.savefig('fig3.png')
 plt.show()
